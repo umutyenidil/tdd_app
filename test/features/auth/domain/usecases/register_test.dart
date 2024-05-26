@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:tdd_app/features/auth/domain/repositories/auth.dart';
 import 'package:tdd_app/features/auth/domain/usecases/register.dart';
 
-class MAuthRepository extends Mock implements AuthRepository {}
+import 'auth_repository.mock.dart';
 
 void main() {
   late Register usecase;
