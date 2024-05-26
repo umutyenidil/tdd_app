@@ -1,10 +1,11 @@
+import 'package:tdd_app/core/utils/typedefs.dart';
 import 'package:tdd_app/features/auth/domain/entities/user.dart';
 
 abstract interface class AuthRepository {
-  Future<(Exception, void)> register({
+  ResultFuture<void> register({
     required String name,
     required String avatar,
   });
 
-  Future<List<User>> readAll();
+  ResultFuture<List<User>> readUsers();
 }
