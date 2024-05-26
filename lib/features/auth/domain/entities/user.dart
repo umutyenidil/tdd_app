@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class User extends Equatable {
-  final int id;
+  final String id;
   final String name;
   final String avatar;
   final String createdAt;
@@ -15,7 +15,7 @@ class User extends Equatable {
 
   factory User.empty() {
     return const User(
-      id: 0,
+      id: '0',
       name: '_empty.string',
       avatar: '_empty.string',
       createdAt: '_empty.string',
