@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tdd_app/core/usecase/params.dart';
 import 'package:tdd_app/features/auth/domain/entities/user.dart';
-import 'package:tdd_app/features/auth/domain/repositories/auth.dart';
+import 'package:tdd_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:tdd_app/features/auth/domain/usecases/read_users.dart';
 
 import 'auth_repository.mock.dart';

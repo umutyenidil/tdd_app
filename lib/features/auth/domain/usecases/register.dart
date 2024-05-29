@@ -1,6 +1,6 @@
 import 'package:tdd_app/core/usecase/usecase.dart';
 import 'package:tdd_app/core/utils/typedefs.dart';
-import 'package:tdd_app/features/auth/domain/repositories/auth.dart';
+import 'package:tdd_app/features/auth/domain/repositories/auth_repository.dart';
 
 class Register implements Usecase<void, RegisterParams> {
   final AuthRepository _repository;

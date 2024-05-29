@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:tdd_app/features/auth/domain/repositories/auth.dart';
+import 'package:tdd_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:tdd_app/features/auth/domain/usecases/register.dart';
 
 import 'auth_repository.mock.dart';
