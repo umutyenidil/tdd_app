@@ -16,8 +16,18 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   ResultFuture<List<User>> readUsers() async {
-    // TODO: implement readUsers
-    throw UnimplementedError();
+    try {
+      final result = await _remoteDataSource.readUsers();
+
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(
+        ServerFailure(
+          message: e.message,
+          statusCode: e.statusCode,
+        ),
+      );
+    }
   }
 
   @override

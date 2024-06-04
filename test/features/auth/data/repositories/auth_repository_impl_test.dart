@@ -8,6 +8,7 @@ import 'package:tdd_app/core/error/failures.dart';
 import 'package:tdd_app/features/auth/data/data_sources/remote/auth_remote_data_source.dart';
 import 'package:tdd_app/features/auth/data/data_sources/remote/auth_remote_data_source_impl.dart';
 import 'package:tdd_app/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:tdd_app/features/auth/domain/entities/user.dart';
 
 class MockAuthRemoteDataSource extends Mock implements AuthRemoteDataSourceImpl {}
 
@@ -20,89 +21,150 @@ void main() {
     repositoryImpl = AuthRepositoryImpl(remoteDataSource: remoteDataSource);
   });
 
-  group('register', () {
-    const name = '_empty.name';
-    const avatar = '_empty.avatar';
+  const tStatusCode = 500;
+  const tMessage = 'unknown';
+  const tException = ServerException(
+    statusCode: tStatusCode,
+    message: tMessage,
+  );
 
-    test(
-      'should call the [AuthRemoteDataSource.register] and complete successfully when the call to the remote source is successful',
-      () async {
-        //  arrange
-        when(
-          () => remoteDataSource.register(
-            name: any(named: 'name'),
-            avatar: any(named: 'avatar'),
-          ),
-        ).thenAnswer(
-          (_) async => Future.value(),
-        );
+  group(
+    'register',
+    () {
+      const tName = '_empty.name';
+      const tAvatar = '_empty.avatar';
 
-        //  act
-        final result = await repositoryImpl.register(
-          name: name,
-          avatar: avatar,
-        );
+      test(
+        'should call the [AuthRemoteDataSource.register] and complete successfully when the call to the remote source is successful',
+        () async {
+          //  arrange
+          when(
+            () => remoteDataSource.register(
+              name: any(named: 'name'),
+              avatar: any(named: 'avatar'),
+            ),
+          ).thenAnswer(
+            (_) async => Future.value(),
+          );
 
-        //  assert
-        expect(
-          result,
-          equals(const Right(null)),
-        );
+          //  act
+          final result = await repositoryImpl.register(
+            name: tName,
+            avatar: tAvatar,
+          );
 
-        verify(
-          () => remoteDataSource.register(name: name, avatar: avatar),
-        ).called(1);
-        verifyNoMoreInteractions(remoteDataSource);
-      },
-    );
+          //  assert
+          expect(
+            result,
+            equals(const Right(null)),
+          );
 
-    test(
-      'should return a [ServerFailure] when the call to the remote data source is not successful',
-      () async {
-        const tStatusCode = 500;
-        const tMessage = 'unknown';
+          verify(
+            () => remoteDataSource.register(name: tName, avatar: tAvatar),
+          ).called(1);
+          verifyNoMoreInteractions(remoteDataSource);
+        },
+      );
 
-        //  arrange
-        when(
-          () => remoteDataSource.register(
-            name: any(named: 'name'),
-            avatar: any(named: 'avatar'),
-          ),
-        ).thenThrow(
-          const ServerException(
-            message: tMessage,
-            statusCode: tStatusCode,
-          ),
-        );
+      test(
+        'should return a [ServerFailure] when the call to the remote data source is not successful',
+        () async {
+          //  arrange
+          when(
+            () => remoteDataSource.register(
+              name: any(named: 'name'),
+              avatar: any(named: 'avatar'),
+            ),
+          ).thenThrow(tException);
 
-        //  act
-        final result = await repositoryImpl.register(
-          name: name,
-          avatar: avatar,
-        );
+          //  act
+          final result = await repositoryImpl.register(
+            name: tName,
+            avatar: tAvatar,
+          );
 
-        //  assert
-        expect(
-          result,
-          equals(
-            const Left(
-              ServerFailure(
-                message: tMessage,
-                statusCode: tStatusCode,
+          //  assert
+          expect(
+            result,
+            equals(
+              const Left(
+                ServerFailure(
+                  message: tMessage,
+                  statusCode: tStatusCode,
+                ),
               ),
             ),
-          ),
-        );
+          );
 
-        verify(
-          () => remoteDataSource.register(
-            name: name,
-            avatar: avatar,
-          ),
-        ).called(1);
+          verify(
+            () => remoteDataSource.register(
+              name: tName,
+              avatar: tAvatar,
+            ),
+          ).called(1);
 
-        verifyNoMoreInteractions(remoteDataSource);
-      },
-    );
-  });
+          verifyNoMoreInteractions(remoteDataSource);
+        },
+      );
+    },
+  );
+
+  group(
+    'readUsers',
+    () {
+      test(
+        'should call the [AuthRemoteDataSource.readUsers] and return [List<User>] when call to remote data source is successful',
+        () async {
+          //  arrange
+          when(
+            () => remoteDataSource.readUsers(),
+          ).thenAnswer(
+            (_) async => [],
+          );
+
+          //  act
+          final result = await repositoryImpl.readUsers();
+
+          //  assert
+          expect(
+            result,
+            isA<Right<dynamic, List<User>>>(),
+          );
+
+          verify(
+            () => remoteDataSource.readUsers(),
+          ).called(1);
+
+          verifyNoMoreInteractions(remoteDataSource);
+        },
+      );
+
+      test(
+        'should call the [AuthRemoteDataSource.readUsers] and return [ServerFailure] when call to remote data source is failed',
+        () async {
+          //  arrange
+          when(
+            () => remoteDataSource.readUsers(),
+          ).thenThrow(tException);
+
+          //  act
+          final result = await repositoryImpl.readUsers();
+
+          //  assert
+          expect(
+            result,
+            equals(
+              Left(ServerFailure.fromException(tException)),
+            ),
+          );
+
+          verify(
+            () => remoteDataSource.readUsers(),
+          ).called(1);
+
+          verifyNoMoreInteractions(remoteDataSource);
+        },
+      );
+    },
+  );
 }

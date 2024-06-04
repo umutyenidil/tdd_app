@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:tdd_app/core/error/exceptions.dart';
 
 abstract class Failure extends Equatable {
   final String message;
@@ -21,4 +22,10 @@ class ServerFailure extends Failure {
     required super.message,
     required super.statusCode,
   });
+
+  ServerFailure.fromException(ServerException exception)
+      : super(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
 }
