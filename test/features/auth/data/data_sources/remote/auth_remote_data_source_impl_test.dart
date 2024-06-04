@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
+import 'package:tdd_app/core/error/exceptions.dart';
 import 'package:tdd_app/core/utils/constants.dart';
 import 'package:tdd_app/features/auth/data/data_sources/remote/auth_remote_data_source.dart';
 import 'package:tdd_app/features/auth/data/data_sources/remote/auth_remote_data_source_impl.dart';
@@ -56,6 +57,30 @@ void main() {
           ),
         ).called(1);
         verifyNoMoreInteractions(client);
+      },
+    );
+
+    test(
+      'should throw [ServerException] when the status code is not 200 or 201',
+      () async {
+        //  arrange
+        when(
+          () => client.post(any(), body: any(named: 'body')),
+        ).thenAnswer(
+          (_) async => http.Response('Invalid email address', 400),
+        );
+
+        //  act
+        final methodCall = remoteDataSource.register;
+
+        //  assert
+        expect(
+          () => methodCall(
+            name: tName,
+            avatar: tAvatar,
+          ),
+          throwsA(const ServerException(message: 'Invalid email address', statusCode: 400)),
+        );
       },
     );
   });
