@@ -18,9 +18,30 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }) : _client = client;
 
   @override
-  Future<List<UserModel>> readUsers() {
-    // TODO: implement readUsers
-    throw UnimplementedError();
+  Future<List<UserModel>> readUsers() async {
+    try {
+      final response = await _client.get(
+        Uri.parse('$kBaseUrl$kRegisterEndpoint'),
+      );
+
+      if (response.statusCode != 200) {
+        throw ServerException(
+          statusCode: response.statusCode,
+          message: response.body,
+        );
+      }
+
+      return (List<Map<String, dynamic>>.from(jsonDecode(response.body)) as List)
+          .map((data) => UserModel.fromMap(data))
+          .toList();
+    } on ServerException {
+      rethrow;
+    } catch (e) {
+      throw ServerException(
+        message: e.toString(),
+        statusCode: 505,
+      );
+    }
   }
 
   @override

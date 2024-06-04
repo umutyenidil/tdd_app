@@ -8,6 +8,7 @@ import 'package:tdd_app/core/error/exceptions.dart';
 import 'package:tdd_app/core/utils/constants.dart';
 import 'package:tdd_app/features/auth/data/data_sources/remote/auth_remote_data_source.dart';
 import 'package:tdd_app/features/auth/data/data_sources/remote/auth_remote_data_source_impl.dart';
+import 'package:tdd_app/features/auth/data/models/user_model.dart';
 
 class MockClient extends Mock implements http.Client {}
 
@@ -84,4 +85,73 @@ void main() {
       },
     );
   });
+
+  group(
+    'readUsers',
+    () {
+      final tUsers = [UserModel.empty()];
+      test(
+        'should return [List<User>] when the status code is 200',
+        () async {
+          //  arrange
+          when(
+            () => client.get(any()),
+          ).thenAnswer(
+            (_) async => http.Response(
+              jsonEncode([tUsers.first.toMap()]),
+              200,
+            ),
+          );
+
+          //  act
+          final result = await remoteDataSource.readUsers();
+
+          //  assert
+          expect(
+            result,
+            equals(tUsers),
+          );
+          verify(
+            () => client.get(
+              Uri.parse('$kBaseUrl$kRegisterEndpoint'),
+            ),
+          ).called(1);
+          verifyNoMoreInteractions(client);
+        },
+      );
+      test(
+        'should return [List<User>] when the status code is not 200',
+        () async {
+          const tMessage = 'hataa';
+          const tStatus = 500;
+
+          //  arrange
+          when(
+            () => client.get(any()),
+          ).thenAnswer(
+            (_) async => http.Response(tMessage, tStatus),
+          );
+
+          //  act
+          final methodCall = remoteDataSource.readUsers;
+
+          //  assert
+          expect(
+            methodCall,
+            throwsA(
+              const ServerException(statusCode: tStatus, message: tMessage),
+            ),
+          );
+
+          verify(
+            () => client.get(
+              Uri.parse('$kBaseUrl$kReadUsersEndpoint'),
+            ),
+          ).called(1);
+
+          verifyNoMoreInteractions(client);
+        },
+      );
+    },
+  );
 }
