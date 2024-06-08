@@ -57,6 +57,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           'avatar': avatar,
           'createdAt': '_empty.createdAt',
         }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       );
 
       if (response.statusCode != 200 && response.statusCode != 201) {

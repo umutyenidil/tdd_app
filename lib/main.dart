@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tdd_app/features/auth/presentation/blocs/auth/auth_bloc.dart';
-import 'package:tdd_app/features/auth/presentation/pages/home_page.dart';
+import 'package:tdd_app/features/auth/presentation/pages/home/home_page.dart';
 
 import 'core/services/injection_container.dart';
 
