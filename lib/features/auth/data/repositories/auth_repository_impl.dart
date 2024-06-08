@@ -3,7 +3,6 @@ import 'package:tdd_app/core/error/exceptions.dart';
 import 'package:tdd_app/core/error/failures.dart';
 import 'package:tdd_app/core/utils/typedefs.dart';
 import 'package:tdd_app/features/auth/data/data_sources/remote/auth_remote_data_source.dart';
-import 'package:tdd_app/features/auth/data/data_sources/remote/auth_remote_data_source_impl.dart';
 import 'package:tdd_app/features/auth/domain/entities/user.dart';
 import 'package:tdd_app/features/auth/domain/repositories/auth_repository.dart';
 
